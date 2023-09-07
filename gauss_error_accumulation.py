@@ -3,8 +3,6 @@ import numpy as np
 from tqdm import tqdm
 import json
 
-CALLED = 0
-
 
 def get_pairwise_maximum(
     input: np.array, poly_deg: int, min: float, max: float, no_approx=False
@@ -62,7 +60,8 @@ def calc_divide_and_conqer(
 
 TRIES = 100
 MU = 0.0
-std = [9]
+STD = 3.
+std = [STD]
 POLY_DEG = 5
 FACTOR = 3.0
 NS = [2, 4, 9, 16, 25]
