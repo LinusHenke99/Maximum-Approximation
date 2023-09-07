@@ -13,5 +13,5 @@ This python script can be used to generate data using a gaussian distribution, w
 Here is a short presentation of the Conclusions I have drawn so far.
 
 ### Optimal values for the approximation borders of the Chebyshev approximation for gaussian distributed inputs
-The task here was to find the optimal factor $math$
+The task here was to find the optimal factor $\mu$
 
