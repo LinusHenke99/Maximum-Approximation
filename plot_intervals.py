@@ -4,13 +4,17 @@ import json
 import numpy as np
 
 
-def get_attributes(filelist: list[str], distribution: str) -> dict:
+def get_attributes(filelist: list[str], distribution: str, scaled=False) -> dict:
     attributes = dict()
     dir_list = filelist.copy()
 
     for filename in dir_list:
         split = filename.split("_")
         split.remove(distribution)
+
+        if scaled:
+            split.remove("scaled")
+
         subdict = {
             element.split("=")[0]: float(element.split("=")[1].split("*")[0])
             for element in split
@@ -22,7 +26,11 @@ def get_attributes(filelist: list[str], distribution: str) -> dict:
 
 def filter() -> list[str]:
     dir_list = listdir("./data")
-    dir_list = [element for element in dir_list if "gauss" in element]
+    dir_list = [
+        element
+        for element in dir_list
+        if "gauss" in element and not "scaled" in element
+    ]
 
     attributes = get_attributes(dir_list, "gauss")
 

@@ -60,27 +60,34 @@ def calc_divide_and_conqer(
 
 TRIES = 100
 MU = 0.0
-STD = 3.
-std = [STD]
+STD = 1.
+std = [1.75, 2.]
 POLY_DEG = 5
 FACTOR = 3.0
 NS = [2, 4, 9, 16, 25]
 
 
-def calc_maxs(N, MU, STD, POLY_DEG, FACTOR) -> tuple[float, float, float]:
+def calc_maxs(N, MU, STD, POLY_DEG, FACTOR, scaler=None) -> tuple[float, float, float]:
     arr = np.zeros(N)
     arr = np.random.normal(MU, STD, N)
 
     real_max = np.max(arr)
+
+    if scaler:
+        arr = scaler[0](arr, MU, STD)
+
     rolled = list()
     for i in range(N):
         roll = np.roll(arr, i)
         rolled.append(roll)
 
-    approx_max = [
+    approx_max = np.array([
         calc_divide_and_conqer(inp, POLY_DEG, MU - FACTOR * STD, MU + FACTOR * STD)
         for inp in rolled
-    ]
+    ])
+
+    if scaler:
+        approx_max = scaler[1](approx_max, MU, STD)
 
     median = np.median(approx_max)
     mean = np.mean(approx_max)
@@ -98,7 +105,7 @@ def squared_error(a: np.array, b: np.array) -> np.array:
 if __name__ == "__main__":
     experiment = dict()
 
-    for STD in tqdm(std):
+    for MU in tqdm(std):
         for N in NS:
             print(f"For N={N}")
             data = {

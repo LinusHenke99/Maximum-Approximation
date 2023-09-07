@@ -24,4 +24,4 @@ x_{1,2} = \mu \pm \lambda \sigma.
 It turns out that it should be $\lambda \approx 3.0$. If $\lambda$ is chosen to
 be to small, there are large oszillations beyond the approximation intervals, 
 leading to very large or very small outliers. For $\lambda=3$ there is only a 
-$0.3 \%$ chance that a value goes beyond that interval.
+$0.3 \% $ chance that a value goes beyond that interval.
