@@ -37,17 +37,24 @@ def filter() -> list[str]:
     return dir_list
 
 
-def main() -> None:
-    files = filter()
-
+def load_data(files: list[str]) -> dict:
     data = dict()
-    offsets = np.linspace(1.0, 3.0, num=9)
 
     for filename in files:
         with open("./data/" + filename, "r") as jsonfile:
             json_object = json.load(jsonfile)
 
         data[filename] = json_object
+
+    return data
+
+
+def main() -> None:
+    files = filter()
+
+    offsets = np.linspace(1.0, 3.0, num=9)
+
+    data = load_data(files)
 
     plot_data = np.ndarray((5, 9))
     plot_err = np.ndarray((5, 9))

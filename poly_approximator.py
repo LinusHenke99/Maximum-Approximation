@@ -49,6 +49,7 @@ class ChebyshevApproximator(PolyApproximator):
         return polynomial
 
 
+#   This sucks
 class LaguereApproximator(PolyApproximator):
     def __init__(
         self, degree: int, min: float, max: float, n_points: int = 100
