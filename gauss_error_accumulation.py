@@ -61,10 +61,10 @@ def calc_divide_and_conqer(
 TRIES = 100
 MU = 0.0
 STD = 1.
-std = [1.75, 2.]
+std = [3]
 POLY_DEG = 5
 FACTOR = 3.0
-NS = [2, 4, 9, 16, 25]
+NS = [2, 4, 9, 16, 25, 36, 49, 64]
 
 
 def calc_maxs(N, MU, STD, POLY_DEG, FACTOR, scaler=None) -> tuple[float, float, float]:
@@ -105,31 +105,30 @@ def squared_error(a: np.array, b: np.array) -> np.array:
 if __name__ == "__main__":
     experiment = dict()
 
-    for MU in tqdm(std):
-        for N in NS:
-            print(f"For N={N}")
-            data = {
-                "real_max": list(),
-                "approx_max": list(),
-                "median": list(),
-                "mean": list(),
-            }
+    for N in NS:
+        print(f"For N={N}")
+        data = {
+            "real_max": list(),
+            "approx_max": list(),
+            "median": list(),
+            "mean": list(),
+        }
 
-            for _ in tqdm(range(TRIES)):
-                real_max, approx_max, median, mean = calc_maxs(
-                    N, MU, STD, POLY_DEG, FACTOR
-                )
-                values = [real_max, approx_max, median, mean]
+        for _ in tqdm(range(TRIES)):
+            real_max, approx_max, median, mean = calc_maxs(
+                N, MU, STD, POLY_DEG, FACTOR
+            )
+            values = [real_max, approx_max, median, mean]
 
-                for key, value in zip(data, values):
-                    data[key].append(value)
+            for key, value in zip(data, values):
+                data[key].append(value)
 
-            experiment[f"N={N}"] = data
+        experiment[f"N={N}"] = data
 
-        json_object = json.dumps(experiment, indent=4)
+    json_object = json.dumps(experiment, indent=4)
 
-        filename = (
-            f"gauss_mu={MU}_std={STD}_polydeg={POLY_DEG}_offset={FACTOR}*std.json"
-        )
-        with open("./data/" + filename, "w") as outfile:
-            outfile.write(json_object)
+    filename = (
+        f"extended_gauss_mu={MU}_std={STD}_polydeg={POLY_DEG}_offset={FACTOR}*std.json"
+    )
+    with open("./data/" + filename, "w") as outfile:
+        outfile.write(json_object)

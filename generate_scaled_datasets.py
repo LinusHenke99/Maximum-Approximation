@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 TRIES = 100
 MU = 0.0
 STD = 1.0
-std = [0.5, 1.0, 1.5, 1.25]
+std = [1.0, 0.5, 1.25, 1.5]
 POLY_DEG = 5
 FACTOR = 3.0
 NS = [2, 4, 9, 16, 25]
@@ -18,16 +18,13 @@ TARGET_SIGMA = 1.0
 
 
 def first_trafo(inp: np.array, mu: float, sigma: float) -> np.array:
-    result = inp - mu
-    result *= TARGET_SIGMA / sigma
-    result += TARGET_MU
+    result = inp - mu + TARGET_MU
 
     return result
 
 
 def second_trafo(inp: np.array, mu: float, sigma: float) -> np.array:
     result = inp - TARGET_MU
-    result /= TARGET_SIGMA / sigma
     result += mu
 
     return result
@@ -39,7 +36,7 @@ SCALER = (first_trafo, second_trafo)
 def main() -> None:
     experiment = dict()
 
-    for MU in tqdm(std):
+    for mu in tqdm(std):
         for N in NS:
             print(f"For N={N}")
             data = {

@@ -10,7 +10,7 @@ def filter() -> list[str]:
     dir_list = [
         element
         for element in dir_list
-        if "gauss" in element and not "scaled" in element
+        if "gauss" in element and not "scaled" in element and not "extended" in element
     ]
 
     attributes = get_attributes(dir_list, "gauss")
@@ -59,6 +59,10 @@ def main() -> None:
         plt.scatter(sigmas, dat.flatten(), label=f"N={n}")
 
     plt.legend()
+    plt.grid()
+    plt.title("Influence of the standard deviation")
+    plt.xlabel("standard deviation")
+    plt.savefig("./plots/standard_deviation.pdf", dpi=150)
     plt.show()
 
 

@@ -4,16 +4,32 @@ import json
 import numpy as np
 
 
-def get_attributes(filelist: list[str], distribution: str, scaled=False) -> dict:
+ylabel = "normalized mean squared error"
+plt.ylabel(ylabel)
+
+
+def get_attributes(filelist: list[str], distribution: str) -> dict:
     attributes = dict()
     dir_list = filelist.copy()
 
     for filename in dir_list:
+        scaled = False
+        extended = False
+
+        if "scaled" in filename:
+            scaled = True
+
+        if "extended" in filename:
+            extended = True
+
         split = filename.split("_")
         split.remove(distribution)
 
         if scaled:
             split.remove("scaled")
+
+        if extended:
+            split.remove("extended")
 
         subdict = {
             element.split("=")[0]: float(element.split("=")[1].split("*")[0])
@@ -29,7 +45,7 @@ def filter() -> list[str]:
     dir_list = [
         element
         for element in dir_list
-        if "gauss" in element and not "scaled" in element
+        if "gauss" in element and not "scaled" in element and not "extended" in element
     ]
 
     attributes = get_attributes(dir_list, "gauss")
@@ -65,7 +81,6 @@ def main() -> None:
     data = load_data(files)
 
     plot_data = np.ndarray((5, 9))
-    plot_err = np.ndarray((5, 9))
 
     for filename in data:
         lst = [filename]
@@ -79,32 +94,19 @@ def main() -> None:
             real_max = np.array(data[filename][N]["real_max"])
             approx_max = np.array(data[filename][N]["approx_max"])
 
-            # overflow = np.where(np.abs(approx_max) >= 1e20)
-            # print(overflow)
-
-            # if len(overflow[0]) > 0:
-            #     for index in overflow[0]:
-            #         print(index)
-            #         real_max[index] = 0
-            #         approx_max[index] = 0
-            # print(filename, N)
-            # print(f"Shape of real_max={real_max.shape}, approx={approx_max.shape}")
-
-            sq_err = (real_max - approx_max) ** 2
-
-            msq_err = np.mean(sq_err)
-            std_dev = np.std(sq_err)
+            msq_err = np.sum((real_max - approx_max) ** 2) / np.sum(real_max**2)
 
             plot_data[first_index, second_index] = msq_err
-            plot_err[first_index, second_index] = std_dev
 
     N = [2, 4, 9, 16, 25]
 
-    for err, dat, n in zip(plot_err, plot_data, N):
-        plt.scatter(offsets, dat.flatten(), label=f"N={n}")
+    for dat, n in zip(plot_data, N):
+        plt.plot(offsets[1:], dat[1:].flatten(), label=f"N={n}")
 
     plt.loglog()
     plt.legend()
+    plt.grid()
+    plt.xlabel("$\\lambda$")
     plt.show()
 
 
